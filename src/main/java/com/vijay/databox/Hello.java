@@ -10,10 +10,10 @@ public class Hello {
 	public String index(@PathVariable String id) {
 		return "Leo" + id;
 	}
-	@GetMapping("/")
-	public String index() {
-		return "Leo Das";
-	}
+	// @GetMapping("/")
+	// public String index() {
+	// 	return "Leo Das";
+	// }
 	
 //	@GetMapping("/new/movies")
 //	public HelloBean index() {

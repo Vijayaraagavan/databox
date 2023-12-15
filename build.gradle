@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	// id 'com.github.node-gradle.node' version '3.4.0'
 }
 
 group = 'com.vijay'
@@ -38,6 +39,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2' // Use the latest version available
+runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2' // Use the same version as jjwt-api
+runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2' // Use the same version as jjwt-api
+
 }
 
 tasks.named('bootBuildImage') {
@@ -47,3 +52,31 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// build.gradle.kts
+// task sync {
+//     inputs.files fileTree("./src/main/resources/static"), fileTree("./src/main/resources/templates")
+
+//     doLast {
+//         copy {
+//             from fileTree("./src/main/resources/static")
+//             into "build/resources/main/static"
+//         }
+//         copy {
+//             from fileTree("./src/main/resources/templates")
+//             into "build/resources/main/templates"
+//         }
+//     }
+// }
+
+
+// tasks.register(com.github.gradle.node.npm.task.NpxTask, 'tailwind'){
+//     command = 'tailwindcss'
+//     args = ['-i', './src/main/frontend/main.css', '-o', './src/main/resources/static/main.css', '--watch']
+// }
+// task tailwind(type: com.github.gradle.node.npm.task.NpxTask) {
+//     command = 'tailwindcss'
+//     args = ['-i', './src/main/frontend/main.css', '-o', './src/main/resources/static/output.css', '--watch']
+// }
+
+// tailwindcss -i ./src/main/frontend/main.css -o ./src/main/resources/static/output.css --watch

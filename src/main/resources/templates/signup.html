@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/main.css}" />
+    <title>Sign Up</title>
+  </head>
+  <body class="bg-gray-400">
+    <!-- <div class="bg-red-700 container"> -->
+    <div
+      class="centerdiv border-gray-400 bg-white w-96 h-max-96 p-4 space-y-6 rounded-lg"
+    >
+      <div class="flex" th:each="field : ${fields}">
+        <label class="w-24" th:text="${field.label}"></label>
+        <div class="flex flex-col space-y-2 flex-1">
+          <input
+            type="text"
+            th:name="${field.name}"
+            th:id="${field.id}"
+            class="border-gray-900 border-2 focus:border-0 p-2 rounded-lg h-10 flex-grow-3"
+          />
+          <p th:id="|${field.id}-error|" class="text-red-600 hidden text-xs">required</p>
+        </div>
+      </div>
+      <!-- <div class="flex">
+        <label class="w-24">Email</label>
+        <div class="flex flex-col space-y-2 flex-1">
+          <input
+            type="text"
+            name="email"
+            id="email"
+            class="border-gray-900 border-2 focus:border-0 p-2 rounded-lg h-10 flex-grow-3"
+          />
+          <p id="email-error" class="text-red-600 hidden text-xs">required</p>
+        </div>
+      </div>
+      <div class="flex">
+        <label class="w-24">Password</label>
+        <div class="flex flex-col space-y-2 flex-1">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="border-gray-900 border-2 focus:border-0 p-2 rounded-lg h-10 flex-grow-3"
+          />
+          <p id="password-error" class="text-red-600 hidden text-xs">required</p>
+        </div>
+
+      </div>
+      <div class="flex">
+        <label class="w-24">Retype Password</label>
+        <div class="flex flex-col space-y-2 flex-1">
+          <input
+            type="password"
+            name="rePassword"
+            id="repassword"
+            class="border-gray-900 border-2 focus:border-0 p-2 rounded-lg h-10 flex-grow-3"
+          />
+          <p id="repassword-error" class="text-red-600 hidden text-xs">required</p>
+        </div>
+      </div> -->
+       
+      <hr />
+      <div class="text-right !mt-3.5">
+        <!-- <button
+          class="mr-4 !mt-0 bg-green-500 hover:opacity-90 rounded-md py-2.5 px-6 text-white"
+          onclick="submit()"
+        >
+          Complete
+        </button> -->
+        <div th:insert="~{buttons::success ('bg-green-500', 'Complete', 'submit')}" class="mr-1"></div>
+      </div>
+    </div>
+    <!-- </div> -->
+  </body>
+
+  <script>
+    const submit = () => {
+      const name = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const rePassword = document.getElementById("repassword").value;
+      const payload = {
+        user: {
+          username: name,
+          email,
+          password,
+          rePassword,
+        },
+      };
+      clear();
+      fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((resp) => resp.json())
+        .then((resp) => {
+          if (resp.status == 200) {
+            console.log(resp);
+          } else {
+            handleError(resp);
+          }
+        })
+        .catch((resp) => handleError(resp));
+    };
+
+    const handleError = (resp) => {
+      for (errorKey in resp) {
+        const el = document.getElementById(`${errorKey}-error`);
+        el.classList.toggle("hidden");
+        el.innerHTML = resp[errorKey];
+      }
+    }
+
+    const clear = () => {
+      const fields = ["username", "password", "email", "repassword"];
+      fields.forEach(key => {
+        const el = document.getElementById(`${key}-error`);
+        el.classList.add("hidden");
+        el.innerHTML = "";
+      })
+    }
+
+  </script>
+
+  <style>
+    .centerdiv {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</html>

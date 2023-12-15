@@ -6,6 +6,8 @@ spring:
     user:
       name: admin
       password: admin
+    filter:
+      order: 10
   datasource:
     driver-class-name: org.postgresql.Driver
     password: yuji
@@ -23,4 +25,8 @@ logging:
 #thymeleaf:
 #  prefix: classpath:/templates/
 #  suffix: .html 
-  
+jwt:
+  secret: RiJbPZ5TULYdpJ8rm5nSrP5hsmDdpFajpAl5wcTTpj7/NlwCtESvuZH77kGj9Qb03BWuKnlk6/bEDi6s+0N0zg==
+  expiration: 3600000
+storage:
+  path: /Users/vijay/dev/projects/spring-suite/databox/storage

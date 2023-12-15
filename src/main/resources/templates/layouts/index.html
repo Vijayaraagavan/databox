@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  th:fragment="layout (title, links, content, script, style)"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/main.css}" />
+    <title th:replace="${title}"></title>
+    <link th:replace="${links}" />
+  </head>
+  <body th:replace="${content}">
+    <!-- <div th:replace="~{components/utils/snackbar :: snackbar}"></div> -->
+  </body>
+  <script th:replace="${script}"></script>
+  <style th:replace="${style}"></style>
+</html>

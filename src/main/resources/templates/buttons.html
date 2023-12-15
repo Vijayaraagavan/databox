@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/main.css}" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button
+      class="!mt-0 hover:opacity-90 rounded-md py-2.5 px-6 text-white"
+      th:fragment="success (color, label, fn)"
+      th:attrappend="class=${' ' + color}, onclick=${'' + fn + '()'}"
+      th:text="${label}"
+    >
+      Complete
+    </button>
+  </body>
+</html>

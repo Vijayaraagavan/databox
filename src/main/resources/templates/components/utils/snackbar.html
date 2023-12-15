@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link th:href="@{/main.css}" rel="stylesheet" /> -->
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      id="snack"
+      th:fragment="snackbar"
+      class="h-12 w-96 absolute top-0 right-0 bg-green-500 text-white rounded-sm p-3 mr-3 mt-2 flex transition-all ease-in animate-y duration-200"
+    >
+      <p id="snack-text">I am snack</p>
+      <div class="flex-1"></div>
+      <button onclick="hideSnack()" class="text-sm">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      <script th:inline="javascript">
+        /*<![CDATA[*/
+        console.log("snacked");
+        let data;
+        const showSnack = (payload) => {
+          clearSnack();
+          Object.assign(data, payload);
+          const txt = document.getElementById("snack-text");
+          txt.innerHTML = data.message;
+          const el = document.getElementById("snack");
+          el.classList.remove("animate-y");
+          el.classList.add(data.color);
+          setTimeout(() => {
+            el.classList.add("animate-y");
+          }, data.timeout || 2000);
+        };
+
+        const hideSnack = () => {
+          const el = document.getElementById("snack");
+          el.classList.add("animate-y");
+        };
+        const clearSnack = () => {
+          data = {
+            message: "Error",
+            color: "bg-green-500",
+            timeout: 2000,
+          };
+        };
+        /*]]>*/
+      </script>
+      <style th:inline="text">
+        .animate-y {
+          top: -100px;
+        }
+      </style>
+    </div>
+  </body>
+</html>
