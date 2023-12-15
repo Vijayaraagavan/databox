@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/main.css}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+    <div th:insert="~{components/gallery/upload :: image-upload}" class="flex justify-end"></div>
+    <div class="flex space-x-3">
+      <div th:each="item : ${userImages}">
+          <div th:insert="~{components/gallery/image :: image-item (${item})}"></div>
+      </div>
+    </div>
+  </body>
+  <script></script>
+  <style></style>
+</html>

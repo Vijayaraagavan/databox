@@ -1,6 +1,8 @@
 package com.vijay.databox.api;
 
 import javax.persistence.Id;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -61,7 +63,7 @@ public class UserController {
 
 	@PostMapping("/api/login")
 	// public UserResponse login(@RequestBody SignInRequest request) {
-	public ResponseEntity<UserResponse> login(@RequestBody SignInRequest request) {
+	public ResponseEntity<UserResponse> login(HttpServletRequest httpRequest, @RequestBody SignInRequest request) {
 		// org.springframework.security.core.Authentication auth =
 		// SecurityContextHolder.getContext().getAuthentication();
 		// AuthenticationManager
@@ -81,6 +83,15 @@ public class UserController {
 		final String token = jwtTokenUtil.generateToken(user2);
 		User user = userService.login(request);
 		UserResponse resp = new UserResponse(user.getUserName(), user.getEmail());
+		HttpSession session =  httpRequest.getSession();
+		session.setAttribute("login", true);
 		return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).body(resp);
+	}
+	@PostMapping("/api/logout")
+	// public UserResponse login(@RequestBody SignInRequest request) {
+	public ResponseEntity<String> logout(HttpServletRequest httpRequest) {
+		HttpSession session =  httpRequest.getSession();
+		session.setAttribute("login", false);
+		return ResponseEntity.ok().body("Logout successfull");
 	}
 }

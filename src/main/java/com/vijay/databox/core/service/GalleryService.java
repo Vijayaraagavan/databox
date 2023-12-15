@@ -1,7 +1,9 @@
 package com.vijay.databox.core.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +36,18 @@ public class GalleryService {
     public Image saveImage(MultipartFile file, ImageDetails details, UserJwtDetails userDetails) {
         User user = userRepo.findByUserName(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        long uid = generateId();
+                // Image oldImage = imageRepo.findByName(details.name());
+        Long uid = generateId();
         String link = save(file, uid);
-        Image image = new Image(details.name(), link, uid, file.getContentType(), user, new Date());
-        return imageRepo.save(image);
+        int identifier = fetchName(user, details);
+        Image image = new Image(details.name(), link, uid, file.getContentType(), user, new Date(), identifier);
+        Image saved = null;
+        try {
+            saved = imageRepo.save(image);
+        } catch (Exception e) {
+            System.out.println("caused " + e.getMessage());
+        }
+        return saved;
     }
 
     public String save(MultipartFile file, long uid) {
@@ -56,5 +66,26 @@ public class GalleryService {
     public long generateId() {
         long random = (long) (Math.random() * 1000);
         return counter.getAndIncrement() + random;
+    }
+
+    public List<Image> getImages(UserJwtDetails userDetails) {
+        // List<Image> images = new ArrayList<Image>();
+        User user = userRepo.findByUserName(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return imageRepo.allImages(user);
+    }
+
+    public List<Image> getImages(User user) {
+        return imageRepo.allImages(user);
+    }
+
+    public int fetchName(User user, ImageDetails details) {
+        Integer identifier = userRepo.findMaxIdentifier(user.getId(), details.name()).orElse(null);
+        System.out.println("identi " + identifier);
+        if (identifier == null) {
+            return 0;
+        } else {
+            return identifier+1;
+        }
     }
 }

@@ -36,4 +36,8 @@ public class UserRepositoryAdapter implements UserRepository {
 	public Optional<User> findByUserName(String userName) {
 		return userJpaRepository.findByUserName(userName);
 	}
+	@Override
+	public Optional<Integer> findMaxIdentifier(Long id, String fileName) {
+		return userJpaRepository.findMaxIdentifier( id,  fileName);
+	}
 }

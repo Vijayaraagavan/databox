@@ -1,10 +1,12 @@
 package com.vijay.databox.persistence.gallery;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.vijay.databox.core.model.User;
 import com.vijay.databox.core.model.gallery.Image;
 import com.vijay.databox.core.model.gallery.ImageRepository;
 
@@ -25,4 +27,10 @@ public class ImageRepositoryAdapter implements ImageRepository {
     public Optional<Image> findById(Long id) {
         return imageJpaRepository.findById(id);
     }
+
+    @Override
+    public List<Image> allImages(User user) {
+        return imageJpaRepository.findByUser(user);
+    }
+
 }

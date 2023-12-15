@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>image</title>
+  </head>
+  <body>
+    <div th:fragment="image-upload">
+      <input type="file" class="hidden" id="uploader" onchange="scan()" />
+      <div
+        class="w-24 h-24 bg-slate-200 rounded-xl justify-center items-center flex hover:cursor-pointer"
+        onclick="select()"
+      >
+        <i class="material-icons !text-6xl text-gray-400">upload_file</i>
+      </div>
+
+      <script>
+        const select = () => {
+          const el = document.getElementById("uploader");
+          el.click();
+        };
+
+        const scan = (event) => {
+          const el = document.getElementById("uploader");
+          console.log(event, el.files);
+          const file = el.files[0];
+          const formData = new FormData();
+          const reader = new  FileReader();
+          const details = {
+            name: "first.png",
+          };
+          reader.onload = (event) => {
+              console.log(event);
+              formData.append("file", new Blob([event.target.result], { type: file.type }));
+              formData.append("details", JSON.stringify(details));
+              send(formData);
+          };
+          reader.readAsDataURL(file);
+          send(formData);
+        };
+
+        const send = (data) => {
+          // console.log(data);
+          fetch("http://localhost:8081/api/images", {
+            method: "POST",
+            body: data,
+            headers: {
+              // "Content-Type": "multipart/form-data",
+              Authorization: localStorage.getItem("token"),
+            },
+          }).then((resp) => {
+            console.log(resp);
+          });
+        };
+      </script>
+    </div>
+  </body>
+</html>

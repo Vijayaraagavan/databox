@@ -4,8 +4,10 @@
 >
   <head>
     <title>Login</title>
+    <script src="/js/bindings.js"></script>
   </head>
   <body class="bg-red-500 xs:text-4xl sm:text-md">
+    <div th:replace="~{components/utils/snackbar :: snackbar}"></div>
     <div
       class="sm:max-w-sm bg-white rounded-xl my-auto h-100 p-6 mx-auto shadow-lg space-y-3 centerdiv"
     >
@@ -46,6 +48,8 @@
   </body>
 
   <script>
+  //  import {enterKey} from "../static/js/bindings";
+   enterKey();
     const send = () => {
       const userel = document.getElementById("username");
       const pel = document.getElementById("password");
@@ -67,6 +71,11 @@
           window.location.href = "/home";
           const token = resp.headers.get("Authorization");
           localStorage.setItem("token", token);
+        } else {
+          showSnack({
+          message: "Invalid login",
+          color: "bg-red-500",
+        });
         }
       });
       // .then(resp => resp.json())

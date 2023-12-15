@@ -11,4 +11,5 @@ public interface UserRepository {
 	
 	Optional<User> findByEmail(String email);
 	Optional<User> findByUserName(String userName);
+	Optional<Integer> findMaxIdentifier(Long id, String fileName);
 }

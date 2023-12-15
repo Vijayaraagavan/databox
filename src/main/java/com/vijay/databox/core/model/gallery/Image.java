@@ -16,7 +16,7 @@ import com.vijay.databox.core.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Table(name = "gallery_image")
+@Table(name = "gallery_images")
 @Entity
 @Getter
 public class Image {
@@ -25,6 +25,8 @@ public class Image {
     private Long id;
     @Column(length = 30)
     private String name;
+    @Column(nullable = false)
+    private int identifier;
     @Column(nullable = false)
     private String path;
     @Column(nullable = false)
@@ -37,14 +39,30 @@ public class Image {
     @Column(nullable = false)
     private Date createdAt = new Date();
     private Date updatedAt;
-    
-    public Image(String name, String path, Long imageId, String imageType, User user, Date updatedAt) {
+
+    public Image(String name, String path, Long imageId, String imageType, User user, Date updatedAt, int identifier) {
+        super();
         this.name = name;
         this.path = path;
         this.imageId = imageId;
         this.imageType = imageType;
         this.user = user;
         this.updatedAt = updatedAt;
+        this.identifier = identifier;
+    }
+
+    public Image(String name, String path, Long imageId, String imageType, User user, Date updatedAt) {
+        super();
+        this.name = name;
+        this.path = path;
+        this.imageId = imageId;
+        this.imageType = imageType;
+        this.user = user;
+        this.updatedAt = updatedAt;
+        this.identifier = 0;
+    }
+
+    public Image() {
     }
 
     @Override
@@ -102,4 +120,10 @@ public class Image {
         return true;
     }
 
+    public Long getImageId() {
+        return this.imageId;
+    }
+    public int getIdentifier() {
+        return this.identifier;
+    }
 }

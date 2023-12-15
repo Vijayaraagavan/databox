@@ -27,7 +27,7 @@
         </svg>
       </button>
       <div class="flex-1"></div>
-      <button>
+      <button onclick="logout()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -90,6 +90,17 @@
       el.classList.toggle("sidebar");
       // icon.classList.toggle("pl-80");
     };
+    const logout = () => {
+      fetch("http://localhost:8081/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log(resp);
+      })
+    }
     /*]]>*/
   </script>
 
