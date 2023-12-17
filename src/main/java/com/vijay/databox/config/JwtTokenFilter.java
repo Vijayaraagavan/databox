@@ -11,7 +11,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import javax.servlet.FilterChain;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,17 +40,21 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         System.out.println("inside filter" + header);
-
-        if (header == null || header.length() == 0 || !header.startsWith("Bearer ")) {
+        String cookieToken = getCookieManually(request);
+        if ("/login".equals(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if ((header == null || header.length() == 0 || !header.startsWith("Bearer ")) && cookieToken == null) {
             // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             // response.setContentType("application/json");
             // response.getWriter().write("Unauthorized: Bearer token is missing");
             filterChain.doFilter(request, response);
             return;
         }
-        final String token = header.split(" ")[1].trim();
+        final String token = cookieToken == null ? header.split(" ")[1].trim() : cookieToken;
         if (!jwtTokenUtil.validateToken(token)) {
-                    System.out.println("not valid");
+            System.out.println("not valid");
 
             filterChain.doFilter(request, response);
             return;
@@ -62,5 +68,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
+    }
+
+    public String getCookieManually(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String token = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                }
+            }
+        }
+        return token;
     }
 }

@@ -23,7 +23,7 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 30)
+    @Column(length = 100)
     private String name;
     @Column(nullable = false)
     private int identifier;

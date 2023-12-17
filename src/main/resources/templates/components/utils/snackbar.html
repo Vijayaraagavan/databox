@@ -30,41 +30,12 @@
           />
         </svg>
       </button>
-      <script th:inline="javascript">
-        /*<![CDATA[*/
-        console.log("snacked");
-        let data;
-        const showSnack = (payload) => {
-          clearSnack();
-          Object.assign(data, payload);
-          const txt = document.getElementById("snack-text");
-          txt.innerHTML = data.message;
-          const el = document.getElementById("snack");
-          el.classList.remove("animate-y");
-          el.classList.add(data.color);
-          setTimeout(() => {
-            el.classList.add("animate-y");
-          }, data.timeout || 2000);
-        };
-
-        const hideSnack = () => {
-          const el = document.getElementById("snack");
-          el.classList.add("animate-y");
-        };
-        const clearSnack = () => {
-          data = {
-            message: "Error",
-            color: "bg-green-500",
-            timeout: 2000,
-          };
-        };
-        /*]]>*/
-      </script>
       <style th:inline="text">
         .animate-y {
           top: -100px;
         }
       </style>
+      <script src="js/snackbar.js"></script>
     </div>
   </body>
 </html>

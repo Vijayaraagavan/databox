@@ -9,14 +9,31 @@
   <body>
     <div th:fragment="image-upload">
       <input type="file" class="hidden" id="uploader" onchange="scan()" />
-      <div
-        class="w-24 h-24 bg-slate-200 rounded-xl justify-center items-center flex hover:cursor-pointer"
+      <button
+        class="w-10 h-10 rounded-full bg-green-500 p-2 text-2xl flex items-center justify-center"
         onclick="select()"
       >
-        <i class="material-icons !text-6xl text-gray-400">upload_file</i>
+        <i class="material-icons !text-2xl text-white">upload_file</i>
+      </button>
+      <div
+        id="update-shower"
+        class="w-72 rounded-lg border-2 fixed right-0 bottom-0 bg-slate-50 update-hide"
+      >
+        <div class="bg-slate-200 w-100 h-12 flex p-3 space-x-3">
+          <strong>Upload progress</strong>
+          <div class="flex-1"></div>
+          <button>
+            <i class="material-icons">expand_more</i>
+          </button>
+          <button>
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div id="p-container"></div>
       </div>
 
       <script>
+        const files = [];
         const select = () => {
           const el = document.getElementById("uploader");
           el.click();
@@ -27,34 +44,118 @@
           console.log(event, el.files);
           const file = el.files[0];
           const formData = new FormData();
-          const reader = new  FileReader();
+          const reader = new FileReader();
           const details = {
-            name: "first.png",
+            name: file.name,
           };
           reader.onload = (event) => {
-              console.log(event);
-              formData.append("file", new Blob([event.target.result], { type: file.type }));
-              formData.append("details", JSON.stringify(details));
-              send(formData);
+            console.log(event);
+            formData.append("file", file);
+            formData.append("details", JSON.stringify(details));
+            send(formData, file);
           };
           reader.readAsDataURL(file);
-          send(formData);
+          // send(formData);
         };
 
-        const send = (data) => {
+        const send = (data, file) => {
           // console.log(data);
-          fetch("http://localhost:8081/api/images", {
-            method: "POST",
-            body: data,
-            headers: {
-              // "Content-Type": "multipart/form-data",
-              Authorization: localStorage.getItem("token"),
-            },
-          }).then((resp) => {
-            console.log(resp);
+          // fetch("/api/images", {
+          //   method: "POST",
+          //   body: data,
+          //   headers: {
+          //     // "Content-Type": "multipart/form-data",
+          //     Authorization: localStorage.getItem("token"),
+          //   },
+          // })
+          // .then((resp) => {
+          //   const reader = resp.getReader();
+          //   while(true) {
+          //     const {done, value} = await reader.read();
+          //   }
+          //   console.log(resp);
+          // });
+          let xhr = new XMLHttpRequest();
+          const cont = document.getElementById("p-container");
+          const item = {
+            name: file.name,
+            icon: "image",
+            id: "item-" + files.length + 1,
+          };
+          files.push(item);
+          createAndAppend(item, cont);
+          const bar = document.getElementById(item.id);
+          const updateShower = document.getElementById("update-shower");
+          if (files.length > 0) {
+            updateShower.classList.remove("update-hide");
+          }
+          xhr.onprogress = (event) => {
+            console.log(event);
+            if (!event.lengthComputable) {
+              const action = document.getElementById(`${item.id}-action`);
+              action.textContent = "check_circle";
+              action.className = "material-icons text-green-500";
+              console.log(`Received ${event.loaded} bytes`); // no Content-Length
+            }
+          };
+          xhr.upload.addEventListener("progress", function (event) {
+            console.log("loading", event);
+            const total = event.total;
+            const loaded = event.loaded;
+            const progress = (loaded / total) * 100;
+            bar.style.width = Math.ceil(progress) + "%";
           });
+          xhr.open("POST", "/api/images", ["async"]);
+          xhr.send(data);
+        };
+        const createAndAppend = (item, cont) => {
+          const newElementContainer = document.createElement("div");
+          newElementContainer.className =
+            "flex !flex-wrap align-items-center p-3";
+
+          // Create the inner flex container
+          const innerFlexContainer = document.createElement("div");
+          innerFlexContainer.className = "flex space-x-3 mb-2";
+          innerFlexContainer.style.width = "300px";
+
+          // Create and append the child elements
+          const icon1 = document.createElement("i");
+          icon1.className = "material-icons text-red-600";
+          icon1.textContent = "image";
+
+          const fileName = document.createElement("p");
+          fileName.className = "flex-1";
+          fileName.textContent = item.name;
+
+          const icon2 = document.createElement("i");
+          icon2.id = `${item.id}-action`;
+          icon2.className = "material-icons text-slate-300";
+          icon2.textContent = "cancel";
+
+          // Append child elements to the inner flex container
+          innerFlexContainer.appendChild(icon1);
+          innerFlexContainer.appendChild(fileName);
+          innerFlexContainer.appendChild(icon2);
+
+          // Create the progress bar element
+          const progressBar = document.createElement("div");
+          progressBar.id = item.id;
+          progressBar.className =
+            "h-2 w-0 my-auto ease-in duration-300 bg-green-400";
+
+          // Append the inner flex container and progress bar to the main container
+          newElementContainer.appendChild(innerFlexContainer);
+          newElementContainer.appendChild(progressBar);
+
+          // Append the new element to the dynamic container
+          cont.appendChild(newElementContainer);
         };
       </script>
+      <style>
+        .update-hide {
+          display: none;
+        }
+      </style>
     </div>
   </body>
 </html>

@@ -1,0 +1,53 @@
+<div
+  id="sidebar"
+  th:fragment="sidenav (tabs, ctx)"
+  class="sidebar w-80 bg-teal-500 min-h-screen z-1 top-0 p-4 left-0 transition-all ease-in-out duration-300 animate text-white"
+>
+  <div class="flex mb-3">
+    <div class="flex-1"></div>
+    <button onclick="showSide()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+        />
+      </svg>
+    </button>
+  </div>
+  <hr />
+  <br />
+  <ul class="list-none space-y-4">
+    <div th:each="tab : ${tabs}">
+      <div
+        class="flex hover:bg-teal-700 hover:cursor-pointer rounded-lg p-3 space-x-4"
+        th:id="${tab.id}"
+        th:attr="data-tab-path=${tab.path}"
+        onclick="route(this.getAttribute('data-tab-path'))"
+      >
+        <i class="material-icons" th:text="${tab.icon}"></i>
+        <!-- <div class="flex-1"></div> -->
+        <li th:text="${tab.name}"></li>
+      </div>
+    </div>
+  </ul>
+  <script th:inline="javascript">
+    const current = /*[[ ${ctx.currentTab} ]]*/ "";
+    const tabs = /*[[ ${tabs} ]]*/ [];
+    console.log(current, tabs);
+    const el = document.getElementById(current);
+    el.classList.add("bg-gray-400");
+    const route = (nav) => {
+      console.log(nav);
+      window.location.href = nav;
+    };
+  </script>
+  <style></style>
+</div>

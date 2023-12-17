@@ -7,12 +7,17 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.vijay.databox.core.model.User;
+import com.vijay.databox.core.model.UserJwtDetails;
+import com.vijay.databox.core.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,13 +25,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginController {
 
-    @GetMapping("/")
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/login")
 	public String home(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         boolean logged = session.getAttribute("login") != null && (boolean) session.getAttribute("login");
-        if (logged) {
-            return "redirect:/home";
-        }
+        // if (logged) {
+        //     return "redirect:/home";
+        // }
 		return "index";
 	}
 
@@ -49,10 +57,27 @@ public class LoginController {
     @GetMapping("/home")
     public String homePage(Model model) {
         // model.addAttribute("username", "vijay");
-        User user = new User("vijays", "23422", "vijay@ardhika.com");
+        UserJwtDetails details = getDetails();
+        User user = userService.getUserByUsername(details.getUsername());
+        // User user = new User("vijays", "23422", "vijay@ardhika.com");
+        SideTab[] tabs = new SideTab[]{
+            new SideTab("images", "Images", "image", true, "/gallery"),
+            new SideTab("recent", "Recent", "schedule", true, ""),
+            new SideTab("shared", "Shared with me", "folder_shared", true, "")
+        };
+        PageContext ctx = new PageContext(tabs[0].id);
         model.addAttribute("user", user);
-        return "home";
+        model.addAttribute("sideTabs", tabs);
+        model.addAttribute("ctx", ctx);
+        return "components/home/home";
     }
 
     record SignUpForm (String id, String label, String name) {}
+    record SideTab (String id, String name, String icon, boolean enabled, String path) {}
+    record PageContext (String currentTab) {}
+
+    UserJwtDetails getDetails() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserJwtDetails) auth.getPrincipal();
+    }
 }

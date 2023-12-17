@@ -17,6 +17,9 @@ import com.vijay.databox.core.model.UserJwtDetails;
 import com.vijay.databox.core.model.UserRepository;
 import com.vijay.databox.core.model.gallery.Image;
 import com.vijay.databox.core.service.GalleryService;
+import com.vijay.databox.core.service.UserService;
+import com.vijay.databox.views.LoginController.PageContext;
+import com.vijay.databox.views.LoginController.SideTab;
 
 @Controller
 public class GalleryView {
@@ -24,13 +27,27 @@ public class GalleryView {
     private GalleryService service;
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private UserService userService;
 
-    @GetMapping("/gallery/{id}")
-    public String doGet(@PathVariable Long id, Model model) {
+    @GetMapping("/gallery")
+    public String doGet(Model model) {
         // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // UserJwtDetails details = (UserJwtDetails) auth.getPrincipal();
-        User user = userRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserJwtDetails details = getDetails();
+        User user = userService.getUserByUsername(details.getUsername());
+        SideTab[] tabs = new SideTab[] {
+                new SideTab("images", "Images", "image", true, "/gallery"),
+                new SideTab("recent", "Recent", "schedule", true, ""),
+                new SideTab("shared", "Shared with me", "folder_shared", true, "")
+        };
+        PageContext ctx = new PageContext(tabs[0].id());
+        model.addAttribute("user", user);
+        model.addAttribute("sideTabs", tabs);
+        model.addAttribute("ctx", ctx);
+
+        // User user = userRepo.findById(id)
+        // .orElseThrow(() -> new IllegalArgumentException("User not found"));
         List<Image> images = service.getImages(user);
 
         List<ImageResponse> resp = new ArrayList<ImageResponse>();
@@ -40,9 +57,16 @@ public class GalleryView {
                 String[] names = image.getName().split("\\.");
                 name = String.format("%s(%d).%s", names[0], image.getIdentifier(), names[1]);
             }
-            resp.add(new ImageResponse(name, image.getImageId(), image.getCreatedAt(), image.getPath()));
+            String[] splitted = image.getPath().split("/storage");
+            String link = "/images/" + image.getImageId() + "_lq.png";
+            resp.add(new ImageResponse(name, image.getImageId(), image.getCreatedAt(), splitted[1], link));
         }
         model.addAttribute("userImages", resp);
         return "components/gallery/gallery";
+    }
+
+    UserJwtDetails getDetails() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserJwtDetails) auth.getPrincipal();
     }
 }

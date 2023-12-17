@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
   lang="en"
-  th:fragment="layout (title, links, content, script, style)"
+  th:fragment="layout (head, content, script, style)"
   xmlns:th="http://www.thymeleaf.org"
 >
   <head>
@@ -9,11 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" th:href="@{/main.css}" />
-    <title th:replace="${title}"></title>
-    <link th:replace="${links}" />
+    <div th:replace="${head}"></div>
+    <!-- <title th:replace="${title}"></title>
+    <link th:replace="${links}" /> -->
+    <script src="/js/axios.js"></script>
+    <!-- <style th:replace="~{components/utils/snackbar :: snackbar}"></style> -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   </head>
-  <body th:replace="${content}">
-    <!-- <div th:replace="~{components/utils/snackbar :: snackbar}"></div> -->
+  <body>
+    <div th:replace="~{components/utils/snackbar :: snackbar}"></div>
+    <div th:replace="${content}"></div>
   </body>
   <script th:replace="${script}"></script>
   <style th:replace="${style}"></style>

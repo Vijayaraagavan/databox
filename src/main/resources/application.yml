@@ -17,6 +17,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  web:
+    resources:
+      static-locations: classpath:/static,file:///Users/vijay/dev/projects/spring-suite/databox/storage
+  servlet:
+    multipart:
+      max-file-size: 3GB
+      max-request-size: 3GB
 logging:
   level:
     org:

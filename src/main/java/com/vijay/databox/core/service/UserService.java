@@ -33,10 +33,14 @@ public class UserService {
 		return userRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
 	}
 
+	public User getUserByUsername(String name) {
+		return userRepo.findByUserName(name).orElseThrow(() -> new IllegalArgumentException("User not found"));
+	}
+
 	public User register(UserRegister request) {
 		System.out.println(request);
 		Map<String, String> errors = new HashMap<>();
-		
+
 		if (!UserValidation.password(request.password())) {
 			// throw new CustomException("Password length must be atleast 4");
 			errors.put("password", "Password length must be atleast 4");
@@ -71,7 +75,7 @@ public class UserService {
 		Optional<User> exist = userRepo.findByUserName(request.username());
 		exist.ifPresent(user -> {
 			if (!authenticate(request.password(), user.getPassword())) {
-								throw new CustomException("Invalid login");
+				throw new CustomException("Invalid login");
 			}
 		});
 		return exist.orElseThrow(() -> new CustomException("user not found"));

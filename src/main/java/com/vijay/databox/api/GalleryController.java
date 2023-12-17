@@ -27,6 +27,7 @@ import com.vijay.databox.core.model.UserRepository;
 import com.vijay.databox.core.model.gallery.Image;
 import com.vijay.databox.core.model.gallery.ImageDetails;
 import com.vijay.databox.core.service.GalleryService;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
 public class GalleryController {
@@ -62,6 +63,13 @@ public class GalleryController {
             resp.add(new ImageResponse(name, image.getImageId(), image.getCreatedAt()));
         }
         return resp;
+    }
+
+    @RequestMapping(value = "api/images/{id}", method = RequestMethod.DELETE)
+    public ImageResponse deleteImage(@PathVariable(name = "id") long id) {
+        UserJwtDetails details = getDetails();
+        Image image = service.deleteImage(details, id);
+        return new ImageResponse(image.getName(), image.getImageId(), image.getCreatedAt());
     }
 
     UserJwtDetails getDetails() {

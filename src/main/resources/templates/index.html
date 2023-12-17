@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html
-  th:replace="~{layouts/index :: layout (~{::title}, ~{}, ~{::body}, ~{::script}, ~{::style})}"
+  th:replace="~{layouts/index :: layout (~{::head}, ~{::body}, ~{::script}, ~{::style})}"
 >
   <head>
     <title>Login</title>
     <script src="/js/bindings.js"></script>
   </head>
   <body class="bg-red-500 xs:text-4xl sm:text-md">
-    <div th:replace="~{components/utils/snackbar :: snackbar}"></div>
+    <!-- <div th:replace="~{components/utils/snackbar :: snackbar}"></div> -->
     <div
       class="sm:max-w-sm bg-white rounded-xl my-auto h-100 p-6 mx-auto shadow-lg space-y-3 centerdiv"
     >
@@ -48,8 +48,8 @@
   </body>
 
   <script>
-  //  import {enterKey} from "../static/js/bindings";
-   enterKey();
+    //  import {enterKey} from "../static/js/bindings";
+    enterEvent();
     const send = () => {
       const userel = document.getElementById("username");
       const pel = document.getElementById("password");
@@ -57,14 +57,15 @@
         username: userel.value,
         password: pel.value,
       };
-      fetch("http://localhost:8081/api/login", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      }).then((resp) => {
+      // fetch("http://localhost:8081/api/login", {
+      //   method: "POST",
+      //   body: JSON.stringify(payload),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: localStorage.getItem("token"),
+      //   },
+      // })
+      post("/api/login", payload).then((resp) => {
         console.log(resp);
         resp.json().then((resp) => console.log(resp));
         if (resp.status == 200) {
@@ -73,9 +74,9 @@
           localStorage.setItem("token", token);
         } else {
           showSnack({
-          message: "Invalid login",
-          color: "bg-red-500",
-        });
+            message: "Invalid login",
+            color: "bg-red-500",
+          });
         }
       });
       // .then(resp => resp.json())

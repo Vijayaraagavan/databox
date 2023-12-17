@@ -1,11 +1,13 @@
 package com.vijay.databox.api;
 
 import javax.persistence.Id;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +31,7 @@ import com.vijay.databox.core.model.UserJwtDetails;
 import com.vijay.databox.core.model.UserRegister;
 import com.vijay.databox.core.service.UserService;
 
+import ch.qos.logback.core.util.Duration;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -83,14 +86,20 @@ public class UserController {
 		final String token = jwtTokenUtil.generateToken(user2);
 		User user = userService.login(request);
 		UserResponse resp = new UserResponse(user.getUserName(), user.getEmail());
-		HttpSession session =  httpRequest.getSession();
+		HttpSession session = httpRequest.getSession();
 		session.setAttribute("login", true);
-		return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).body(resp);
+		ResponseCookie cookie = ResponseCookie.from("token", token)
+				.maxAge(java.time.Duration.ofHours(1)) // Set the maximum age of the cookie to 1 hour
+				.path("/") // Set the cookie path (optional)
+				.build();
+		return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+				.header("Set-Cookie", cookie.toString()).body(resp);
 	}
+
 	@PostMapping("/api/logout")
 	// public UserResponse login(@RequestBody SignInRequest request) {
 	public ResponseEntity<String> logout(HttpServletRequest httpRequest) {
-		HttpSession session =  httpRequest.getSession();
+		HttpSession session = httpRequest.getSession();
 		session.setAttribute("login", false);
 		return ResponseEntity.ok().body("Logout successfull");
 	}

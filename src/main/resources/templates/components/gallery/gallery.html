@@ -1,21 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html
+  th:replace="~{components/home/home :: home(~{::body}, ~{::script}, ~{::style})}"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" th:href="@{/main.css}" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
   </head>
   <body>
-    <div th:insert="~{components/gallery/upload :: image-upload}" class="flex justify-end"></div>
-    <div class="flex space-x-3">
+    <div
+      th:insert="~{components/gallery/upload :: image-upload}"
+      class="flex justify-end m-4"
+    ></div>
+    <div class="flex flex-wrap">
       <div th:each="item : ${userImages}">
-          <div th:insert="~{components/gallery/image :: image-item (${item})}"></div>
+        <div
+          th:replace="~{components/gallery/image :: image-item (${item})}"
+        ></div>
+      </div>
+    </div>
+    <div
+      id="cover"
+      class="flex flex-wrap p-4 justify-center items-center absolute top-0 left-0 bg-opacity-70 h-screen w-screen bg-slate-400 hide"
+    >
+      <div class="flex w-full">
+        <div class="flex-1"></div>
+        <button onclick="closeCover()">
+          <i class="material-icons text-white">close</i>
+        </button>
+      </div>
+      <div class="opacity-100 w-3/4 h-3/4">
+        <img
+          style="max-width: 100%; max-height: 100%; margin: auto"
+          src=""
+          alt=""
+        />
       </div>
     </div>
   </body>
-  <script></script>
-  <style></style>
+  <script>
+    const remove = (imgId) => {
+      httpDelete("/api/images/" + imgId, {});
+    };
+    const viewImage = (link) => {
+      console.log(link);
+      const el = document.getElementById("cover");
+      el.classList.remove("hide");
+      const img = el.querySelector("img");
+      img.src = link;
+    };
+    const closeCover = () => {
+      console.log("close");
+      const el = document.getElementById("cover");
+      el.classList.add("hide");
+    };
+  </script>
+  <style>
+    .hide {
+      display: none;
+    }
+  </style>
 </html>

@@ -33,4 +33,11 @@ public class ImageRepositoryAdapter implements ImageRepository {
         return imageJpaRepository.findByUser(user);
     }
 
+    public Optional<Image> findByIdAndImageId(Long userId, Long id) {
+        return imageJpaRepository.findByIdAndImageId(userId, id);
+    }
+
+    public void deleteById(Long id) {
+        imageJpaRepository.deleteById(id);
+    }
 }
