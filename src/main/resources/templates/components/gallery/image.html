@@ -36,8 +36,10 @@
           <!-- <p class="font-medium" th:text="${image.getName()}"></p> -->
           <div class="flex-1"></div>
           <button
+            class="relative"
+            th:id="'opt-btn-' + ${item.imageId}"
             th:attr="data-image-detail=${item.imageId}"
-            onclick="remove(this.getAttribute('data-image-detail'))"
+            onclick="showOptions(this.getAttribute('data-image-detail'))"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,6 +55,25 @@
                 d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
               />
             </svg>
+            <div
+              th:id="'options-' + ${item.imageId}"
+              class="w-48 rounded-sm bg-white absolute p-3 border-2 hidden"
+            >
+              <ul class="list-none text-left space-y-3">
+                <div
+                  class="flex space-x-3"
+                  th:attr="data-image-detail=${item.imageId}"
+                  onclick="remove(this.getAttribute('data-image-detail'))"
+                >
+                  <i class="material-icons text-red-400">delete</i>
+                  <li>delete</li>
+                </div>
+                <div class="flex space-x-3">
+                  <i class="material-icons">preview</i>
+                  <li>view</li>
+                </div>
+              </ul>
+            </div>
           </button>
         </div>
         <div

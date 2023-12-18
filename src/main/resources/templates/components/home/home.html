@@ -54,7 +54,7 @@
         th:insert="~{components/home/sidenav :: sidenav (${sideTabs}, ${ctx})}"
       ></div>
       <div
-        class="container mx-4 max-w-screen overflow-hidden overflow-y-scroll max-h-screen"
+        class="mx-4 max-w-screen overflow-hidden overflow-y-scroll max-h-screen"
         th:if="${body}"
       >
         <div th:replace="${body}"></div>

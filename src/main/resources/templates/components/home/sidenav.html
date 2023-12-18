@@ -1,11 +1,11 @@
 <div
   id="sidebar"
   th:fragment="sidenav (tabs, ctx)"
-  class="sidebar w-80 bg-teal-500 min-h-screen z-1 top-0 p-4 left-0 transition-all ease-in-out duration-300 animate text-white"
+  class="sidebar w-72 xs:w-80 bg-teal-500 min-h-screen z-50 absolute top-0 p-4 left-0 transition-all ease-in-out duration-300 animate text-white"
 >
   <div class="flex mb-3">
     <div class="flex-1"></div>
-    <button onclick="showSide()">
+    <button onclick="showSide()" class="block">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -49,5 +49,10 @@
       window.location.href = nav;
     };
   </script>
-  <style></style>
+  <style>
+    .sidebar {
+      left: -270px;
+      width: 0;
+    }
+  </style>
 </div>

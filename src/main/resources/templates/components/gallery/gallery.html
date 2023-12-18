@@ -60,6 +60,31 @@
       const el = document.getElementById("cover");
       el.classList.add("hide");
     };
+    let currentOption;
+    let counter = 0;
+    const showOptions = (imageId) => {
+      const el = document.getElementById(`options-${imageId}`);
+      const btn = document.getElementById(`opt-btn-${imageId}`);
+      currentOption = el;
+      const clientWidth = window.innerWidth;
+      const menuRect = el.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+
+      el.classList.remove("hidden");
+      // width of menu is 165
+      if (clientWidth - btnRect.left - 200 < 165) {
+        el.style.left = -165 + "px";
+      }
+    };
+    document.addEventListener("click", (event) => {
+      if (currentOption) {
+        counter += 1;
+        if (counter > 1) {
+          counter = 0;
+          currentOption.classList.add("hidden");
+        }
+      }
+    });
   </script>
   <style>
     .hide {

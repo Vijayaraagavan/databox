@@ -92,9 +92,11 @@
           xhr.onprogress = (event) => {
             console.log(event);
             if (!event.lengthComputable) {
+              // upload completed
               const action = document.getElementById(`${item.id}-action`);
               action.textContent = "check_circle";
               action.className = "material-icons text-green-500";
+              setTimeout(() => location.reload(), 2000);
               console.log(`Received ${event.loaded} bytes`); // no Content-Length
             }
           };

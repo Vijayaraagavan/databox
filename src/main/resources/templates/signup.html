@@ -97,10 +97,11 @@
           "Content-Type": "application/json",
         },
       })
-        .then((resp) => resp.json())
+        // .then((resp) => resp.json())
         .then((resp) => {
           if (resp.status == 200) {
             console.log(resp);
+            window.location.href = '/login';
           } else {
             handleError(resp);
           }
