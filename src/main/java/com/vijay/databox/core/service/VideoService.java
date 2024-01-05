@@ -31,6 +31,12 @@ public class VideoService {
         return uid;
     }
 
+    public String getVideo(long id) {
+        String dir = location + "/videos/";
+        // return dir + "1703096668771/lake_video.mp4";
+        return "/Users/vijay/Downloads/Jawan.mkv";
+    }
+
     public long generateId(long id) {
         if (id != -1) {
             return id;

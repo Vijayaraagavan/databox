@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.vijay.databox.api.response.ImageResponse;
+import com.vijay.databox.core.model.SideTab;
 import com.vijay.databox.core.model.User;
 import com.vijay.databox.core.model.UserJwtDetails;
 import com.vijay.databox.core.model.UserRepository;
@@ -19,7 +20,7 @@ import com.vijay.databox.core.model.gallery.Image;
 import com.vijay.databox.core.service.GalleryService;
 import com.vijay.databox.core.service.UserService;
 import com.vijay.databox.views.LoginController.PageContext;
-import com.vijay.databox.views.LoginController.SideTab;
+import com.vijay.databox.views.modules.SideNav;
 
 @Controller
 public class GalleryView {
@@ -36,11 +37,7 @@ public class GalleryView {
         // UserJwtDetails details = (UserJwtDetails) auth.getPrincipal();
         UserJwtDetails details = getDetails();
         User user = userService.getUserByUsername(details.getUsername());
-        SideTab[] tabs = new SideTab[] {
-                new SideTab("images", "Images", "image", true, "/gallery"),
-                new SideTab("recent", "Recent", "schedule", true, ""),
-                new SideTab("shared", "Shared with me", "folder_shared", true, "")
-        };
+        SideTab[] tabs = new SideNav().getNav();
         PageContext ctx = new PageContext(tabs[0].id());
         model.addAttribute("user", user);
         model.addAttribute("sideTabs", tabs);
@@ -63,6 +60,24 @@ public class GalleryView {
         }
         model.addAttribute("userImages", resp);
         return "components/gallery/gallery";
+    }
+
+    @GetMapping("/videos")
+    public String getVideos(Model model) {
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // UserJwtDetails details = (UserJwtDetails) auth.getPrincipal();
+        UserJwtDetails details = getDetails();
+        User user = userService.getUserByUsername(details.getUsername());
+        SideTab[] tabs = new SideNav().getNav();
+        PageContext ctx = new PageContext(tabs[0].id());
+        model.addAttribute("user", user);
+        model.addAttribute("sideTabs", tabs);
+        model.addAttribute("ctx", ctx);
+
+        // User user = userRepo.findById(id)
+        // .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        return "components/videos/videos";
     }
 
     UserJwtDetails getDetails() {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html
+  th:replace="~{components/home/home :: home(~{::body}, ~{::script}, ~{::style})}"
+>
+  <head>
+    <title>Gallery</title>
+  </head>
+  <body>
+    <!-- <div
+      th:insert="~{components/gallery/upload :: image-upload}"
+      class="flex justify-end m-4"
+    ></div> -->
+    <!-- <div class="flex flex-wrap">
+      <div th:each="item : ${userImages}">
+        <div
+          th:replace="~{components/gallery/image :: image-item (${item})}"
+        ></div>
+      </div>
+    </div> -->
+    <div
+      id="cover"
+      class="flex flex-wrap p-4 justify-center items-center absolute top-0 left-0 bg-opacity-70 h-screen w-screen bg-slate-400 hide"
+    >
+      <div class="flex w-full">
+        <div class="flex-1"></div>
+        <button onclick="closeCover()">
+          <i class="material-icons text-white">close</i>
+        </button>
+      </div>
+      <div class="opacity-100 w-3/4 h-3/4">
+        <div style="max-width: 100%; max-height: 100%; margin: auto">
+          <video controls>
+            <source src="api/videos/2" type="video/mp4" />
+            <source src="api/videos/2" type="video/mkv" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

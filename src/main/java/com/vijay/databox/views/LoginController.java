@@ -15,9 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.vijay.databox.core.model.SideTab;
 import com.vijay.databox.core.model.User;
 import com.vijay.databox.core.model.UserJwtDetails;
 import com.vijay.databox.core.service.UserService;
+import com.vijay.databox.views.modules.SideNav;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,12 +62,8 @@ public class LoginController {
         UserJwtDetails details = getDetails();
         User user = userService.getUserByUsername(details.getUsername());
         // User user = new User("vijays", "23422", "vijay@ardhika.com");
-        SideTab[] tabs = new SideTab[]{
-            new SideTab("images", "Images", "image", true, "/gallery"),
-            new SideTab("recent", "Recent", "schedule", true, ""),
-            new SideTab("shared", "Shared with me", "folder_shared", true, "")
-        };
-        PageContext ctx = new PageContext(tabs[0].id);
+        SideTab[] tabs = new SideNav().getNav();
+        PageContext ctx = new PageContext(tabs[0].id());
         model.addAttribute("user", user);
         model.addAttribute("sideTabs", tabs);
         model.addAttribute("ctx", ctx);
@@ -73,7 +71,6 @@ public class LoginController {
     }
 
     record SignUpForm (String id, String label, String name) {}
-    record SideTab (String id, String name, String icon, boolean enabled, String path) {}
     record PageContext (String currentTab) {}
 
     UserJwtDetails getDetails() {
