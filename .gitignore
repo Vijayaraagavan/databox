@@ -40,3 +40,4 @@ target/classes
 target/test-classes
 storage/
 /spy.log
+src/main/resources/static/node_modules/

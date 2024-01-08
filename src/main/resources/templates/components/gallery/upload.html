@@ -48,10 +48,10 @@
           const details = {
             name: file.name,
           };
-          if (file.type.includes('video')) {
+          // if (file.type.includes('video')) {
               processVideo(file);
               return;
-            }
+            // }
           reader.onload = (event) => {
             console.log(event);
             formData.append("file", file);

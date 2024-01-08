@@ -1,6 +1,6 @@
 const processVideo = async (file) => {
   console.log("got video", file);
-  const MINIMUM_SIZE = 10 * 1024 * 1024; // 50MB
+  const MINIMUM_SIZE = 50 * 1024 * 1024; // 50MB
 
   const size = file.size;
   const totalChunks = calculateTotal(size, MINIMUM_SIZE);
@@ -9,8 +9,9 @@ const processVideo = async (file) => {
   let index = 1;
   let videoId = -1;
   while (start < size) {
-    const chunk = file.slice(start, start + MINIMUM_SIZE);
-    const meta = getMetaData(chunk, file, index, videoId);
+    const end = start + MINIMUM_SIZE;
+    const chunk = file.slice(start, end);
+    const meta = getMetaData(chunk, file, index, videoId, start, end);
     resp = await uploadChunk(chunk, meta);
     // console.log("resp ", resp);
     videoId = resp.videoId;
@@ -23,7 +24,7 @@ const calculateTotal = (size, min) => {
   return Math.ceil(size / min);
 };
 
-const getMetaData = (chunk, file, index, videoId) => {
+const getMetaData = (chunk, file, index, videoId, start, end) => {
   return {
     name: file.name,
     index: index,
@@ -31,6 +32,8 @@ const getMetaData = (chunk, file, index, videoId) => {
     size: chunk.size,
     total: file.size,
     videoId: videoId,
+    chunkStart: start,
+    chunkEnd: start + chunk.size
   };
 };
 

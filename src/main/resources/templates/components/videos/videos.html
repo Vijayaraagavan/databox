@@ -4,6 +4,8 @@
 >
   <head>
     <title>Gallery</title>
+    <link href="https://vjs.zencdn.net/8.9.0/video-js.css" rel="stylesheet" />
+    <!-- <script src="/node_modules/video.js/dist/video.min.js"></script> -->
   </head>
   <body>
     <!-- <div
@@ -29,7 +31,7 @@
       </div>
       <div class="opacity-100 w-3/4 h-3/4">
         <div style="max-width: 100%; max-height: 100%; margin: auto">
-          <video controls>
+          <video controls id="vid1" class="video-js" preload="auto" data-setup='{}'>
             <source src="api/videos/2" type="video/mp4" />
             <source src="api/videos/2" type="video/mkv" />
             Your browser does not support the video tag.
@@ -38,4 +40,8 @@
       </div>
     </div>
   </body>
+  <script src="https://vjs.zencdn.net/8.9.0/video.min.js"></script>
+  <script src="/js/videoPlayer.js">
+    
+  </script>
 </html>
